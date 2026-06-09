@@ -3,118 +3,335 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>卡密格式转换工具</title>
+  <title>系统工具集合</title>
   <style>
     :root {
       color-scheme: light;
-      --bg: #eef6ff;
+      --bg: #f3f6fb;
       --surface: #ffffff;
-      --surface-soft: #f6fbff;
-      --ink: #081827;
-      --muted: #5e7187;
-      --line: #cfe0f1;
-      --primary: #075fa8;
-      --primary-dark: #064a84;
-      --primary-soft: #d9edff;
-      --ok: #087f5b;
-      --warn: #b45309;
-      --shadow: 0 24px 70px rgba(12, 74, 129, 0.13);
+      --surface-2: #f8fafc;
+      --surface-3: #eef4f8;
+      --ink: #111827;
+      --ink-soft: #334155;
+      --muted: #64748b;
+      --line: #d8e1ea;
+      --line-strong: #b8c6d6;
+      --primary: #0f766e;
+      --primary-strong: #115e59;
+      --primary-soft: #dff5f1;
+      --blue: #2563eb;
+      --blue-soft: #e8f0ff;
+      --amber: #b45309;
+      --amber-soft: #fff3d6;
+      --red: #b91c1c;
+      --red-soft: #fee2e2;
+      --green: #15803d;
+      --green-soft: #dcfce7;
+      --violet: #6d28d9;
+      --violet-soft: #f0e7ff;
+      --shadow: 0 20px 55px rgba(20, 31, 48, 0.12);
+      --radius: 8px;
+      --sidebar: 280px;
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       background:
-        linear-gradient(135deg, rgba(7, 95, 168, 0.12), transparent 34%),
-        linear-gradient(315deg, rgba(14, 165, 233, 0.18), transparent 42%),
-        var(--bg);
+        linear-gradient(180deg, #ffffff 0, #f2f6fb 38%, #edf3f5 100%);
       color: var(--ink);
-      font-family: "Trebuchet MS", "Microsoft YaHei", sans-serif;
+      font-family: Inter, "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
       letter-spacing: 0;
     }
 
     button,
-    textarea {
+    input,
+    textarea,
+    select {
       font: inherit;
     }
 
-    .page {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 42px 0;
+    button {
+      cursor: pointer;
     }
 
-    .hero {
+    .shell {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 24px;
-      align-items: end;
-      margin-bottom: 22px;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      padding: 22px 16px;
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 52px;
+      padding: 0 8px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), #2563eb);
+      color: #ffffff;
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.24);
+      font-weight: 800;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .nav button {
+      display: grid;
+      grid-template-columns: 36px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      min-height: 48px;
+      width: 100%;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--ink-soft);
+      text-align: left;
+      transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    .nav button:hover {
+      background: var(--surface-2);
+      border-color: var(--line);
+      color: var(--ink);
+    }
+
+    .nav button.active {
+      background: var(--primary-soft);
+      border-color: rgba(15, 118, 110, 0.28);
+      color: var(--primary-strong);
+      box-shadow: inset 3px 0 0 var(--primary);
+    }
+
+    .nav-icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--surface-3);
+      color: currentColor;
+    }
+
+    .nav-icon svg,
+    .btn svg,
+    .icon-btn svg,
+    .mini-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-text {
+      display: block;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 750;
+      font-size: 14px;
+    }
+
+    .sidebar-note {
+      margin-top: 18px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .content {
+      min-width: 0;
+      padding: 26px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 58px;
+      margin-bottom: 20px;
+    }
+
+    .topbar-title {
+      min-width: 0;
     }
 
     .eyebrow {
-      margin: 0 0 10px;
+      margin: 0 0 6px;
       color: var(--primary);
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 800;
       text-transform: uppercase;
     }
 
-    h1 {
+    .topbar h2 {
       margin: 0;
-      font-size: clamp(32px, 5vw, 58px);
-      line-height: 1.02;
-      max-width: 720px;
-    }
-
-    .intro {
-      margin: 14px 0 0;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 760px;
+      font-size: 28px;
+      line-height: 1.12;
     }
 
     .status-pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      min-height: 40px;
-      padding: 0 14px;
+      min-height: 38px;
+      padding: 0 13px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, 0.84);
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
       white-space: nowrap;
     }
 
     .dot {
       width: 9px;
       height: 9px;
-      border-radius: 999px;
+      border-radius: 99px;
       background: var(--primary);
-      box-shadow: 0 0 0 5px rgba(7, 95, 168, 0.12);
+      box-shadow: 0 0 0 5px rgba(15, 118, 110, 0.14);
     }
 
-    .workspace {
+    .tool {
+      display: none;
+    }
+
+    .tool.active {
+      display: block;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 16px;
+      box-shadow: 0 12px 30px rgba(20, 31, 48, 0.07);
+    }
+
+    .metric .mini-icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .metric:nth-child(2) .mini-icon {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .metric:nth-child(3) .mini-icon {
+      background: var(--violet-soft);
+      color: var(--violet);
+    }
+
+    .metric:nth-child(4) .mini-icon {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .metric h3 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .metric p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 13px;
+    }
+
+    .grid-2 {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 18px;
+      gap: 16px;
       align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
     }
 
     .panel {
       min-width: 0;
-      border: 1px solid rgba(207, 224, 241, 0.9);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.92);
       box-shadow: var(--shadow);
       overflow: hidden;
-      backdrop-filter: blur(12px);
+    }
+
+    .panel.tight {
+      box-shadow: 0 12px 28px rgba(20, 31, 48, 0.08);
     }
 
     .panel-head {
@@ -122,155 +339,432 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      min-height: 64px;
+      min-height: 66px;
       padding: 16px 18px;
       border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, #ffffff, var(--surface-soft));
+      background: linear-gradient(180deg, #ffffff, var(--surface-2));
     }
 
     .panel-title {
       margin: 0;
       font-size: 18px;
+      line-height: 1.25;
     }
 
     .panel-note {
       margin: 5px 0 0;
       color: var(--muted);
       font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .panel-body {
+      padding: 18px;
     }
 
     .actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
       justify-content: flex-end;
+      gap: 8px;
     }
 
-    .btn {
+    .btn,
+    .icon-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
+      gap: 8px;
       min-height: 38px;
-      padding: 0 13px;
       border: 1px solid transparent;
       border-radius: 7px;
-      background: var(--primary);
-      color: #ffffff;
-      cursor: pointer;
-      font-weight: 700;
       transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
+      user-select: none;
+      white-space: nowrap;
     }
 
-    .btn:hover {
-      background: var(--primary-dark);
+    .btn {
+      padding: 0 13px;
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 760;
+    }
+
+    .btn:hover,
+    .icon-btn:hover {
       transform: translateY(-1px);
     }
 
-    .btn:active {
+    .btn:active,
+    .icon-btn:active {
       transform: translateY(0);
     }
 
     .btn.secondary {
       border-color: var(--line);
       background: #ffffff;
-      color: var(--primary);
+      color: var(--ink-soft);
     }
 
     .btn.secondary:hover {
-      background: var(--primary-soft);
+      border-color: var(--line-strong);
+      background: var(--surface-3);
     }
 
-    .btn svg {
-      width: 17px;
-      height: 17px;
-      stroke-width: 2.2;
+    .btn.blue {
+      background: var(--blue);
+    }
+
+    .btn.warn {
+      background: var(--amber);
+    }
+
+    .icon-btn {
+      width: 38px;
+      padding: 0;
+      border-color: var(--line);
+      background: #ffffff;
+      color: var(--ink-soft);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #ffffff;
+      color: var(--ink);
+      outline: 0;
+      transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+    }
+
+    input,
+    select {
+      min-height: 42px;
+      padding: 0 12px;
     }
 
     textarea {
       display: block;
-      width: 100%;
-      min-height: 430px;
+      min-height: 260px;
       resize: vertical;
-      border: 0;
-      outline: 0;
-      padding: 18px;
-      background: transparent;
-      color: var(--ink);
-      line-height: 1.6;
+      padding: 13px;
+      line-height: 1.58;
       font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      font-size: 14px;
+      font-size: 13px;
     }
 
-    textarea::placeholder {
-      color: #8497aa;
+    textarea.large {
+      min-height: 430px;
     }
 
-    textarea:focus-visible {
-      box-shadow: inset 0 0 0 3px rgba(7, 95, 168, 0.24);
+    textarea.medium {
+      min-height: 190px;
     }
 
-    #output {
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: rgba(15, 118, 110, 0.55);
+      box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+    }
+
+    textarea[readonly] {
       background:
-        linear-gradient(90deg, rgba(7, 95, 168, 0.06), transparent 42%),
-        transparent;
+        linear-gradient(90deg, rgba(15, 118, 110, 0.05), transparent 45%),
+        #ffffff;
     }
 
-    .feedback {
+    ::placeholder {
+      color: #94a3b8;
+    }
+
+    .tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
+      gap: 8px;
+      margin-top: 14px;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .tag {
       display: inline-flex;
       align-items: center;
-      min-height: 32px;
-      padding: 0 11px;
+      gap: 7px;
+      min-height: 30px;
+      padding: 0 10px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--muted);
+      white-space: nowrap;
     }
 
     .tag.ok {
-      border-color: rgba(8, 127, 91, 0.25);
-      color: var(--ok);
-      background: rgba(8, 127, 91, 0.08);
+      border-color: rgba(21, 128, 61, 0.24);
+      background: var(--green-soft);
+      color: var(--green);
     }
 
     .tag.warn {
-      border-color: rgba(180, 83, 9, 0.28);
-      color: var(--warn);
-      background: rgba(180, 83, 9, 0.08);
+      border-color: rgba(180, 83, 9, 0.24);
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .tag.bad {
+      border-color: rgba(185, 28, 28, 0.22);
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .tag.info {
+      border-color: rgba(37, 99, 235, 0.2);
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .result-box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      padding: 14px;
+      min-height: 88px;
+    }
+
+    .result-box h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .code-display {
+      display: grid;
+      place-items: center;
+      min-height: 168px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(15, 118, 110, 0.12), transparent 52%),
+        linear-gradient(315deg, rgba(37, 99, 235, 0.12), transparent 48%),
+        #ffffff;
+      text-align: center;
+    }
+
+    .totp-code {
+      margin: 0;
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 54px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    .totp-meta {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .progress {
+      width: 100%;
+      height: 9px;
+      margin-top: 16px;
+      border-radius: 99px;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--primary), var(--blue));
+      transition: width 300ms linear;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 9px 12px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .kv dt {
+      color: var(--muted);
+      font-weight: 760;
+    }
+
+    .kv dd {
+      margin: 0;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      font-family: "SFMono-Regular", Consolas, monospace;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background: var(--surface-2);
+      color: var(--ink-soft);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .url-cell {
+      max-width: 360px;
+      overflow-wrap: anywhere;
+      font-family: "SFMono-Regular", Consolas, monospace;
+    }
+
+    .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .segmented {
+      display: inline-flex;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      gap: 3px;
+    }
+
+    .segmented button {
+      min-height: 32px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 760;
+    }
+
+    .segmented button.active {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      min-height: 120px;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: var(--surface-2);
+      text-align: center;
+      padding: 18px;
     }
 
     .notice {
-      margin-top: 18px;
-      padding: 15px 17px;
-      border: 1px solid rgba(7, 95, 168, 0.18);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.66);
+      margin-top: 14px;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
       color: var(--muted);
-      line-height: 1.7;
-      font-size: 14px;
+      line-height: 1.62;
+      font-size: 13px;
     }
 
-    @media (max-width: 820px) {
-      .page {
-        width: min(100% - 22px, 1180px);
-        padding: 26px 0;
-      }
+    .hidden {
+      display: none !important;
+    }
 
-      .hero,
-      .workspace {
+    @media (max-width: 1180px) {
+      .overview-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 920px) {
+      .shell {
         grid-template-columns: 1fr;
       }
 
-      .status-pill {
-        justify-self: start;
+      .sidebar {
+        position: static;
+        height: auto;
+        padding: 14px;
+      }
+
+      .brand {
+        padding-bottom: 12px;
+      }
+
+      .nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .sidebar-note {
+        display: none;
+      }
+
+      .content {
+        padding: 18px 14px 28px;
+      }
+
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .nav {
+        grid-template-columns: 1fr;
+      }
+
+      .overview-grid {
+        grid-template-columns: 1fr;
       }
 
       .panel-head {
@@ -282,8 +776,16 @@
         justify-content: flex-start;
       }
 
-      textarea {
+      textarea.large {
         min-height: 300px;
+      }
+
+      .totp-code {
+        font-size: 42px;
+      }
+
+      .kv {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -298,63 +800,377 @@
   </style>
 </head>
 <body>
-  <main class="page">
-    <section class="hero" aria-labelledby="page-title">
-      <div>
-        <p class="eyebrow">Local Formatter</p>
-        <h1 id="page-title">卡密格式转换工具</h1>
-        <p class="intro">粘贴一行或多行竖线分隔的卡密数据，自动整理成账号、密码、2FA、邮箱、邮箱密码、辅助邮箱和 cookie 格式。解析只在本地浏览器执行。</p>
-      </div>
-      <div class="status-pill" aria-live="polite">
-        <span class="dot" aria-hidden="true"></span>
-        <span id="status">等待输入</span>
-      </div>
-    </section>
-
-    <section class="workspace" aria-label="格式转换区域">
-      <article class="panel">
-        <div class="panel-head">
-          <div>
-            <h2 class="panel-title">原始卡密</h2>
-            <p class="panel-note">每行一个账号，支持字段位置变化，邮箱也可以在 cookie 后面。</p>
-          </div>
-          <div class="actions">
-            <button class="btn secondary" id="sampleBtn" type="button" title="填入脱敏示例">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 4h16v16H4z"></path><path d="M8 9h8"></path><path d="M8 15h5"></path></svg>
-              示例
-            </button>
-            <button class="btn secondary" id="clearBtn" type="button" title="清空输入和输出">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M7 6l1 14h8l1-14"></path><path d="M10 11v5"></path><path d="M14 11v5"></path></svg>
-              清空
-            </button>
-          </div>
+  <div class="shell">
+    <aside class="sidebar" aria-label="工具导航">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">K</div>
+        <div>
+          <h1>系统工具集合</h1>
+          <p>本地优先的账号辅助工具台</p>
         </div>
-        <textarea id="input" spellcheck="false" placeholder="例如：账号|密码|2FA|邮箱|邮箱密码|辅助邮箱|cookie&#10;账号|密码|2FA|邮箱|邮箱密码|辅助邮箱|cookie"></textarea>
-      </article>
+      </div>
 
-      <article class="panel">
-        <div class="panel-head">
-          <div>
-            <h2 class="panel-title">整理结果</h2>
-            <p class="panel-note">结果会实时生成，可直接复制。</p>
-          </div>
-          <div class="actions">
-            <button class="btn" id="copyBtn" type="button" title="复制整理后的结果">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              复制
+      <nav class="nav">
+        <button class="active" type="button" data-tool-target="overview">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></span>
+          <span class="nav-text">工具总览</span>
+        </button>
+        <button type="button" data-tool-target="kami">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 8V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v1"></path><path d="M3 16v1a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-1"></path><path d="M7 12h10"></path><path d="M12 7v10"></path></svg></span>
+          <span class="nav-text">卡密整理</span>
+        </button>
+        <button type="button" data-tool-target="totp">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M12 18h.01"></path><path d="M9 7h6"></path><path d="M9 11h6"></path></svg></span>
+          <span class="nav-text">2FA 在线验证</span>
+        </button>
+        <button type="button" data-tool-target="keys">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"></circle><path d="M12 12l8-8"></path><path d="M16 4h4v4"></path></svg></span>
+          <span class="nav-text">公钥/密钥验证</span>
+        </button>
+        <button type="button" data-tool-target="facebook">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></span>
+          <span class="nav-text">Facebook 状态检查</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-note">
+        2FA 和密钥处理在浏览器本地执行。Facebook 模块用于公开链接可访问性辅助核验。
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <div class="topbar-title">
+          <p class="eyebrow">Tool Console</p>
+          <h2 id="pageTitle">工具总览</h2>
+        </div>
+        <div class="status-pill" aria-live="polite">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="globalStatus">就绪</span>
+        </div>
+      </header>
+
+      <section class="tool active" id="tool-overview">
+        <div class="overview-grid">
+          <article class="metric" data-jump="kami">
+            <span class="mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h10"></path></svg></span>
+            <h3>卡密整理</h3>
+            <p>账号、密码、2FA、邮箱、辅助邮箱和 Cookie 字段整理。</p>
+          </article>
+          <article class="metric" data-jump="totp">
+            <span class="mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span>
+            <h3>2FA 验证</h3>
+            <p>TOTP 动态码生成、校验、倒计时和复制。</p>
+          </article>
+          <article class="metric" data-jump="keys">
+            <span class="mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2"></path><path d="M15 8l-3 3"></path><circle cx="7.5" cy="16.5" r="5.5"></circle></svg></span>
+            <h3>公钥/密钥</h3>
+            <p>PEM 与 OpenSSH 识别、指纹计算、密钥对匹配验证。</p>
+          </article>
+          <article class="metric" data-jump="facebook">
+            <span class="mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></span>
+            <h3>Facebook 检查</h3>
+            <p>批量整理公开链接，辅助标记活跃、不可用和待复核状态。</p>
+          </article>
+        </div>
+
+        <section class="panel tight">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">最近状态</h3>
+              <p class="panel-note">当前页面不依赖后端服务，打开 HTML 即可使用。</p>
+            </div>
+            <button class="btn secondary" type="button" data-tool-target="kami">
+              <svg viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="M13 5l7 7-7 7"></path></svg>
+              进入工具
             </button>
           </div>
+          <div class="panel-body">
+            <div class="grid-3">
+              <div class="result-box">
+                <h3>本地执行</h3>
+                <div class="tags"><span class="tag ok">敏感内容不上传</span><span class="tag info">无构建依赖</span></div>
+              </div>
+              <div class="result-box">
+                <h3>密钥能力</h3>
+                <div class="tags"><span class="tag info">SHA-256 指纹</span><span class="tag ok">签名验对</span></div>
+              </div>
+              <div class="result-box">
+                <h3>账号核验</h3>
+                <div class="tags"><span class="tag warn">公开链接辅助</span><span class="tag">手动复核</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="tool" id="tool-kami">
+        <div class="grid-2">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">原始卡密</h3>
+                <p class="panel-note">每行一个账号，支持字段位置变化。</p>
+              </div>
+              <div class="actions">
+                <button class="btn secondary" id="sampleBtn" type="button" title="填入示例">
+                  <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"></path><path d="M8 9h8"></path><path d="M8 15h5"></path></svg>
+                  示例
+                </button>
+                <button class="btn secondary" id="clearBtn" type="button" title="清空">
+                  <svg viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M7 6l1 14h8l1-14"></path></svg>
+                  清空
+                </button>
+              </div>
+            </div>
+            <textarea class="large" id="input" spellcheck="false" placeholder="账号|密码|2FA|邮箱|邮箱密码|辅助邮箱|cookie"></textarea>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">整理结果</h3>
+                <p class="panel-note">实时生成，可直接复制。</p>
+              </div>
+              <div class="actions">
+                <button class="btn" id="copyBtn" type="button" title="复制">
+                  <svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  复制
+                </button>
+              </div>
+            </div>
+            <textarea class="large" id="output" spellcheck="false" readonly placeholder="转换后的格式"></textarea>
+          </article>
         </div>
-        <textarea id="output" spellcheck="false" readonly placeholder="这里会显示转换后的格式"></textarea>
-      </article>
-    </section>
+        <div class="tags" id="feedback" aria-live="polite">
+          <span class="tag">未检测到内容</span>
+        </div>
+      </section>
 
-    <div class="feedback" id="feedback" aria-live="polite">
-      <span class="tag">未检测到内容</span>
-    </div>
+      <section class="tool" id="tool-totp">
+        <div class="grid-2">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">2FA Secret</h3>
+                <p class="panel-note">支持 Base32 Secret 和 otpauth 链接。</p>
+              </div>
+              <div class="actions">
+                <button class="btn secondary" id="totpSampleBtn" type="button" title="示例">
+                  <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"></path><path d="M8 9h8"></path><path d="M8 15h5"></path></svg>
+                  示例
+                </button>
+                <button class="btn secondary" id="totpClearBtn" type="button" title="清空">
+                  <svg viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                  清空
+                </button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="field">
+                <label for="totpSecret">密钥</label>
+                <input id="totpSecret" spellcheck="false" autocomplete="off" placeholder="JBSWY3DPEHPK3PXP">
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label for="totpDigits">位数</label>
+                  <select id="totpDigits">
+                    <option value="6" selected>6 位</option>
+                    <option value="8">8 位</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="totpPeriod">周期</label>
+                  <select id="totpPeriod">
+                    <option value="30" selected>30 秒</option>
+                    <option value="60">60 秒</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="totpVerifyInput">验证码校验</label>
+                <input id="totpVerifyInput" inputmode="numeric" autocomplete="one-time-code" placeholder="输入动态码">
+              </div>
+              <div class="actions">
+                <button class="btn blue" id="verifyTotpBtn" type="button">
+                  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg>
+                  验证
+                </button>
+                <button class="btn secondary" id="copyTotpBtn" type="button">
+                  <svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  复制验证码
+                </button>
+              </div>
+            </div>
+          </article>
 
-    <p class="notice">提示：每行解析为一个账号，输出会连续排列不插入空行。如果某项无法识别，会在下方状态里标出。cookie 会尽量合并包含 c_user、xs、fr、datr 等键的片段，并补齐末尾分号。</p>
-  </main>
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">当前动态码</h3>
+                <p class="panel-note" id="totpState">等待密钥</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="code-display">
+                <div>
+                  <p class="totp-code" id="totpCode">------</p>
+                  <p class="totp-meta" id="totpMeta">剩余 0 秒</p>
+                  <div class="progress" aria-hidden="true"><span id="totpProgress"></span></div>
+                </div>
+              </div>
+              <div class="tags" id="totpFeedback" aria-live="polite">
+                <span class="tag">未生成</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="tool" id="tool-keys">
+        <div class="grid-2">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">公钥</h3>
+                <p class="panel-note">支持 PEM 和 OpenSSH 公钥。</p>
+              </div>
+              <button class="btn secondary" id="keySampleBtn" type="button">
+                <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"></path><path d="M8 9h8"></path><path d="M8 15h5"></path></svg>
+                示例
+              </button>
+            </div>
+            <textarea class="medium" id="publicKeyInput" spellcheck="false" placeholder="-----BEGIN PUBLIC KEY-----"></textarea>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">私钥</h3>
+                <p class="panel-note">PEM 私钥可用于密钥对匹配。</p>
+              </div>
+              <button class="btn secondary" id="keyClearBtn" type="button">
+                <svg viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                清空
+              </button>
+            </div>
+            <textarea class="medium" id="privateKeyInput" spellcheck="false" placeholder="-----BEGIN PRIVATE KEY-----"></textarea>
+          </article>
+        </div>
+
+        <section class="panel tight" style="margin-top: 16px;">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">密钥验证结果</h3>
+              <p class="panel-note">指纹使用 SHA-256 计算。</p>
+            </div>
+            <div class="actions">
+              <button class="btn" id="analyzeKeysBtn" type="button">
+                <svg viewBox="0 0 24 24"><path d="M9 11 12 14 22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                验证密钥
+              </button>
+              <button class="btn secondary" id="copyKeyReportBtn" type="button">
+                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                复制报告
+              </button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="grid-2">
+              <div class="result-box">
+                <h3>公钥信息</h3>
+                <dl class="kv" id="publicKeyReport"></dl>
+              </div>
+              <div class="result-box">
+                <h3>私钥信息</h3>
+                <dl class="kv" id="privateKeyReport"></dl>
+              </div>
+            </div>
+            <div class="tags" id="keyFeedback" aria-live="polite">
+              <span class="tag">等待验证</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel tight" style="margin-top: 16px;">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">签名验证</h3>
+              <p class="panel-note">使用上方公钥验证原文和 Base64 签名。</p>
+            </div>
+            <button class="btn blue" id="verifySignatureBtn" type="button">
+              <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg>
+              验签
+            </button>
+          </div>
+          <div class="panel-body">
+            <div class="grid-2">
+              <div class="field">
+                <label for="signatureMessage">原文</label>
+                <textarea class="medium" id="signatureMessage" spellcheck="false" placeholder="需要验证的原文"></textarea>
+              </div>
+              <div class="field">
+                <label for="signatureInput">签名</label>
+                <textarea class="medium" id="signatureInput" spellcheck="false" placeholder="Base64 签名"></textarea>
+              </div>
+            </div>
+            <div class="tags" id="signatureFeedback"><span class="tag">等待验签</span></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="tool" id="tool-facebook">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Facebook 公开链接</h3>
+              <p class="panel-note">支持主页、个人公开页和 profile.php 链接。</p>
+            </div>
+            <div class="actions">
+              <button class="btn secondary" id="facebookSampleBtn" type="button">
+                <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"></path><path d="M8 9h8"></path><path d="M8 15h5"></path></svg>
+                示例
+              </button>
+              <button class="btn secondary" id="facebookClearBtn" type="button">
+                <svg viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                清空
+              </button>
+              <button class="btn" id="facebookCheckBtn" type="button">
+                <svg viewBox="0 0 24 24"><path d="M9 11 12 14 22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                生成结果
+              </button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <textarea class="medium" id="facebookInput" spellcheck="false" placeholder="https://www.facebook.com/zuck"></textarea>
+            <div class="notice">公开站点通常会限制跨域读取，结果用于链接整理和人工复核；外部页面会在新标签打开。</div>
+          </div>
+        </section>
+
+        <section class="panel tight" style="margin-top: 16px;">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">检查结果</h3>
+              <p class="panel-note" id="facebookSummary">等待输入</p>
+            </div>
+            <div class="actions">
+              <button class="btn secondary" id="openFacebookValidBtn" type="button">
+                <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path></svg>
+                打开有效链接
+              </button>
+              <button class="btn secondary" id="copyFacebookReportBtn" type="button">
+                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                复制报告
+              </button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="facebookResults" class="empty">暂无结果</div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
 
   <script id="parser-source" type="text/plain">
     const LABELS = [
@@ -553,14 +1369,89 @@
     const parserCode = document.getElementById("parser-source").textContent;
     Function(`${parserCode}; window.parseCredentialLine = parseCredentialLine; window.formatCredential = formatCredential; window.parseCredentialBatch = parseCredentialBatch; window.formatCredentialBatch = formatCredentialBatch;`)();
 
-    const input = document.getElementById("input");
-    const output = document.getElementById("output");
-    const status = document.getElementById("status");
-    const feedback = document.getElementById("feedback");
-    const copyBtn = document.getElementById("copyBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const sampleBtn = document.getElementById("sampleBtn");
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => [...document.querySelectorAll(selector)];
+    const globalStatus = $("#globalStatus");
+    const pageTitle = $("#pageTitle");
+    const toolTitles = {
+      overview: "工具总览",
+      kami: "卡密整理",
+      totp: "2FA 在线验证",
+      keys: "公钥/密钥验证",
+      facebook: "Facebook 状态检查"
+    };
 
+    function setStatus(text) {
+      globalStatus.textContent = text;
+    }
+
+    function switchTool(name) {
+      $$(".tool").forEach((tool) => tool.classList.toggle("active", tool.id === `tool-${name}`));
+      $$("[data-tool-target]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.toolTarget === name);
+      });
+      pageTitle.textContent = toolTitles[name] || "系统工具集合";
+      setStatus(`${pageTitle.textContent}已打开`);
+    }
+
+    $$("[data-tool-target]").forEach((button) => {
+      button.addEventListener("click", () => switchTool(button.dataset.toolTarget));
+    });
+
+    $$("[data-jump]").forEach((card) => {
+      card.addEventListener("click", () => switchTool(card.dataset.jump));
+      card.tabIndex = 0;
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          switchTool(card.dataset.jump);
+        }
+      });
+    });
+
+    async function copyText(text, successText) {
+      if (!text.trim()) {
+        setStatus("没有可复制内容");
+        return false;
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const helper = document.createElement("textarea");
+        helper.value = text;
+        helper.style.position = "fixed";
+        helper.style.opacity = "0";
+        document.body.appendChild(helper);
+        helper.focus();
+        helper.select();
+        document.execCommand("copy");
+        helper.remove();
+      }
+
+      setStatus(successText || "已复制");
+      return true;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function tag(text, type = "") {
+      return `<span class="tag ${type}">${escapeHtml(text)}</span>`;
+    }
+
+    const input = $("#input");
+    const output = $("#output");
+    const feedback = $("#feedback");
+    const copyBtn = $("#copyBtn");
+    const clearBtn = $("#clearBtn");
+    const sampleBtn = $("#sampleBtn");
     const fields = [
       ["account", "账号"],
       ["password", "密码"],
@@ -570,70 +1461,699 @@
       ["recoveryEmail", "辅助邮箱"],
       ["cookie", "Cookie"]
     ];
-
     const sample = [
       "10000000000001|DemoPass#2026|JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP|user@example.com|MailPass#2026|backup@example.net|c_user=10000000000001;xs=demo;fr=demo;datr=demo;|",
       "10000000000002|OtherPass#2026|KRSXG5DSNFXGOIDPNYQHG5DSNFXGOIDP|second@example.com|MailPass#2027|second-backup@example.net|c_user=10000000000002;xs=demo2;fr=demo2;datr=demo2;"
     ].join("\n");
 
-    function renderTags(records) {
+    function renderCredentialTags(records) {
       const completeCount = records.filter((record) => fields.every(([key]) => record[key])).length;
       const incompleteCount = records.length - completeCount;
-      const tags = [`<span class="tag ok">已解析 ${records.length} 个账号</span>`];
+      const tags = [tag(`已解析 ${records.length} 个账号`, "ok")];
 
       if (incompleteCount) {
-        tags.push(`<span class="tag warn">${incompleteCount} 个账号缺少字段</span>`);
+        tags.push(tag(`${incompleteCount} 个账号缺少字段`, "warn"));
       } else {
-        tags.push('<span class="tag ok">字段完整</span>');
+        tags.push(tag("字段完整", "ok"));
       }
 
       feedback.innerHTML = tags.join("");
-      status.textContent = records.length ? `已解析 ${records.length} 个账号` : "等待输入";
+      setStatus(records.length ? `已解析 ${records.length} 个账号` : "等待输入");
     }
 
-    function updateOutput() {
+    function updateCredentialOutput() {
       const raw = input.value.trim();
       if (!raw) {
         output.value = "";
-        status.textContent = "等待输入";
-        feedback.innerHTML = '<span class="tag">未检测到内容</span>';
+        feedback.innerHTML = tag("未检测到内容");
+        setStatus("等待输入");
         return;
       }
 
       const records = window.parseCredentialBatch(raw);
       output.value = window.formatCredentialBatch(records);
-      renderTags(records);
+      renderCredentialTags(records);
     }
 
-    async function copyOutput() {
-      if (!output.value.trim()) {
-        status.textContent = "没有可复制内容";
-        return;
-      }
-
-      try {
-        await navigator.clipboard.writeText(output.value);
-        status.textContent = "已复制";
-      } catch {
-        output.focus();
-        output.select();
-        document.execCommand("copy");
-        status.textContent = "已复制";
-      }
-    }
-
-    input.addEventListener("input", updateOutput);
-    copyBtn.addEventListener("click", copyOutput);
+    input.addEventListener("input", updateCredentialOutput);
+    copyBtn.addEventListener("click", () => copyText(output.value, "卡密结果已复制"));
     clearBtn.addEventListener("click", () => {
       input.value = "";
-      updateOutput();
+      updateCredentialOutput();
       input.focus();
     });
     sampleBtn.addEventListener("click", () => {
       input.value = sample;
-      updateOutput();
+      updateCredentialOutput();
       input.focus();
     });
+
+    const totpSecret = $("#totpSecret");
+    const totpDigits = $("#totpDigits");
+    const totpPeriod = $("#totpPeriod");
+    const totpVerifyInput = $("#totpVerifyInput");
+    const totpCode = $("#totpCode");
+    const totpMeta = $("#totpMeta");
+    const totpState = $("#totpState");
+    const totpProgress = $("#totpProgress");
+    const totpFeedback = $("#totpFeedback");
+    const totpSampleBtn = $("#totpSampleBtn");
+    const totpClearBtn = $("#totpClearBtn");
+    const copyTotpBtn = $("#copyTotpBtn");
+    const verifyTotpBtn = $("#verifyTotpBtn");
+    let currentTotp = "";
+    let lastTotpVerification = null;
+
+    function extractTotpSecret(value) {
+      const trimmed = value.trim();
+      if (!trimmed) return "";
+
+      if (/^otpauth:\/\//i.test(trimmed)) {
+        try {
+          const url = new URL(trimmed);
+          return url.searchParams.get("secret") || "";
+        } catch {
+          return "";
+        }
+      }
+
+      return trimmed;
+    }
+
+    function base32ToBytes(value) {
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+      const cleaned = extractTotpSecret(value).toUpperCase().replace(/[\s=-]/g, "");
+      if (!cleaned || /[^A-Z2-7]/.test(cleaned)) {
+        throw new Error("密钥格式无效");
+      }
+
+      let bits = "";
+      for (const char of cleaned) {
+        bits += alphabet.indexOf(char).toString(2).padStart(5, "0");
+      }
+
+      const bytes = [];
+      for (let i = 0; i + 8 <= bits.length; i += 8) {
+        bytes.push(parseInt(bits.slice(i, i + 8), 2));
+      }
+      return new Uint8Array(bytes);
+    }
+
+    function counterToBytes(counter) {
+      const buffer = new ArrayBuffer(8);
+      const view = new DataView(buffer);
+      const high = Math.floor(counter / 0x100000000);
+      const low = counter >>> 0;
+      view.setUint32(0, high);
+      view.setUint32(4, low);
+      return buffer;
+    }
+
+    async function generateTotp(secretValue, timeStep = Date.now()) {
+      const secretBytes = base32ToBytes(secretValue);
+      const period = Number(totpPeriod.value);
+      const digits = Number(totpDigits.value);
+      const counter = Math.floor(timeStep / 1000 / period);
+      const key = await crypto.subtle.importKey(
+        "raw",
+        secretBytes,
+        { name: "HMAC", hash: "SHA-1" },
+        false,
+        ["sign"]
+      );
+      const signature = new Uint8Array(await crypto.subtle.sign("HMAC", key, counterToBytes(counter)));
+      const offset = signature[signature.length - 1] & 0xf;
+      const binary = ((signature[offset] & 0x7f) << 24)
+        | ((signature[offset + 1] & 0xff) << 16)
+        | ((signature[offset + 2] & 0xff) << 8)
+        | (signature[offset + 3] & 0xff);
+      return String(binary % (10 ** digits)).padStart(digits, "0");
+    }
+
+    async function updateTotp() {
+      const secret = totpSecret.value.trim();
+      const period = Number(totpPeriod.value);
+      const now = Date.now();
+      const remaining = period - (Math.floor(now / 1000) % period);
+      const elapsed = period - remaining;
+      totpMeta.textContent = `剩余 ${remaining} 秒`;
+      totpProgress.style.width = `${Math.max(0, Math.min(100, (elapsed / period) * 100))}%`;
+
+      if (!secret) {
+        currentTotp = "";
+        lastTotpVerification = null;
+        totpCode.textContent = "-".repeat(Number(totpDigits.value));
+        totpState.textContent = "等待密钥";
+        totpFeedback.innerHTML = tag("未生成");
+        return;
+      }
+
+      if (!crypto.subtle) {
+        totpState.textContent = "当前浏览器不支持 Web Crypto";
+        totpFeedback.innerHTML = tag("无法生成", "bad");
+        return;
+      }
+
+      try {
+        currentTotp = await generateTotp(secret, now);
+        totpCode.textContent = currentTotp;
+        totpState.textContent = "已生成";
+        const tags = [tag("TOTP 有效", "ok"), tag(`${Number(totpDigits.value)} 位`, "info"), tag(`${period} 秒周期`)];
+        if (
+          lastTotpVerification
+          && Date.now() - lastTotpVerification.time < 30000
+          && lastTotpVerification.inputCode === totpVerifyInput.value.trim().replace(/\s/g, "")
+        ) {
+          tags.unshift(tag(lastTotpVerification.message, lastTotpVerification.type));
+        }
+        totpFeedback.innerHTML = tags.join("");
+      } catch (error) {
+        currentTotp = "";
+        lastTotpVerification = null;
+        totpCode.textContent = "-".repeat(Number(totpDigits.value));
+        totpState.textContent = "密钥无效";
+        totpFeedback.innerHTML = tag(error.message || "密钥格式无效", "bad");
+      }
+    }
+
+    async function verifyTotp() {
+      await updateTotp();
+      const inputCode = totpVerifyInput.value.trim().replace(/\s/g, "");
+      if (!currentTotp || !inputCode) {
+        totpFeedback.innerHTML = tag("请输入密钥和验证码", "warn");
+        return;
+      }
+
+      const now = Date.now();
+      const previous = await generateTotp(totpSecret.value, now - Number(totpPeriod.value) * 1000);
+      const next = await generateTotp(totpSecret.value, now + Number(totpPeriod.value) * 1000);
+      const matched = [previous, currentTotp, next].includes(inputCode);
+      lastTotpVerification = {
+        inputCode,
+        message: matched ? "验证码匹配" : "验证码不匹配",
+        type: matched ? "ok" : "bad",
+        time: Date.now()
+      };
+      totpFeedback.innerHTML = tag(lastTotpVerification.message, lastTotpVerification.type);
+      setStatus(matched ? "2FA 验证通过" : "2FA 验证未通过");
+    }
+
+    [totpSecret, totpDigits, totpPeriod, totpVerifyInput].forEach((element) => {
+      element.addEventListener("input", () => {
+        lastTotpVerification = null;
+        updateTotp();
+      });
+    });
+    totpSampleBtn.addEventListener("click", () => {
+      totpSecret.value = "JBSWY3DPEHPK3PXP";
+      updateTotp();
+    });
+    totpClearBtn.addEventListener("click", () => {
+      totpSecret.value = "";
+      totpVerifyInput.value = "";
+      updateTotp();
+      totpSecret.focus();
+    });
+    copyTotpBtn.addEventListener("click", () => copyText(currentTotp, "2FA 验证码已复制"));
+    verifyTotpBtn.addEventListener("click", verifyTotp);
+    setInterval(updateTotp, 1000);
+    updateTotp();
+
+    const publicKeyInput = $("#publicKeyInput");
+    const privateKeyInput = $("#privateKeyInput");
+    const publicKeyReport = $("#publicKeyReport");
+    const privateKeyReport = $("#privateKeyReport");
+    const keyFeedback = $("#keyFeedback");
+    const signatureMessage = $("#signatureMessage");
+    const signatureInput = $("#signatureInput");
+    const signatureFeedback = $("#signatureFeedback");
+    let lastKeyReportText = "";
+
+    function bytesToBase64(bytes) {
+      let binary = "";
+      bytes.forEach((byte) => {
+        binary += String.fromCharCode(byte);
+      });
+      return btoa(binary);
+    }
+
+    function base64ToBytes(value) {
+      const binary = atob(value.replace(/\s/g, ""));
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    function pemWrap(label, bytes) {
+      const base64 = bytesToBase64(new Uint8Array(bytes));
+      const lines = base64.match(/.{1,64}/g) || [];
+      return `-----BEGIN ${label}-----\n${lines.join("\n")}\n-----END ${label}-----`;
+    }
+
+    function bytesToHex(bytes) {
+      return [...bytes].map((byte) => byte.toString(16).padStart(2, "0")).join(":");
+    }
+
+    async function sha256(bytes) {
+      return new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
+    }
+
+    function readAsn1Length(bytes, offset) {
+      let length = bytes[offset];
+      if (length < 0x80) return { length, next: offset + 1 };
+      const octets = length & 0x7f;
+      length = 0;
+      for (let i = 0; i < octets; i += 1) {
+        length = (length << 8) | bytes[offset + 1 + i];
+      }
+      return { length, next: offset + 1 + octets };
+    }
+
+    function estimateRsaBitsFromDer(bytes) {
+      const sequenceIndex = bytes.indexOf(0x03);
+      if (sequenceIndex < 0) return "";
+      let offset = readAsn1Length(bytes, sequenceIndex + 1).next;
+      offset += 1;
+      if (bytes[offset] !== 0x30) return "";
+      offset = readAsn1Length(bytes, offset + 1).next;
+      if (bytes[offset] !== 0x02) return "";
+      const lengthInfo = readAsn1Length(bytes, offset + 1);
+      offset = lengthInfo.next;
+      let length = lengthInfo.length;
+      while (bytes[offset] === 0 && length > 0) {
+        offset += 1;
+        length -= 1;
+      }
+      return `${length * 8} bits`;
+    }
+
+    function parsePem(value) {
+      const match = value.trim().match(/-----BEGIN ([^-]+)-----([\s\S]+?)-----END \1-----/);
+      if (!match) return null;
+      return {
+        format: "PEM",
+        label: match[1].trim(),
+        bytes: base64ToBytes(match[2]),
+        rawBase64: match[2].replace(/\s/g, "")
+      };
+    }
+
+    function readSshString(bytes, offset) {
+      const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+      const length = view.getUint32(offset);
+      const start = offset + 4;
+      const end = start + length;
+      return {
+        text: new TextDecoder().decode(bytes.slice(start, end)),
+        bytes: bytes.slice(start, end),
+        next: end
+      };
+    }
+
+    function parseOpenSshPublic(value) {
+      const parts = value.trim().split(/\s+/);
+      if (!/^ssh-(rsa|ed25519)|^ecdsa-sha2-/.test(parts[0] || "") || !parts[1]) return null;
+      const bytes = base64ToBytes(parts[1]);
+      let type = parts[0];
+      try {
+        const first = readSshString(bytes, 0);
+        type = first.text || type;
+      } catch {
+        type = parts[0];
+      }
+      return {
+        format: "OpenSSH",
+        label: type,
+        bytes,
+        comment: parts.slice(2).join(" ")
+      };
+    }
+
+    function keyKind(label) {
+      if (/PUBLIC KEY|ssh-|ecdsa-sha2-/i.test(label)) return "public";
+      if (/PRIVATE KEY/i.test(label)) return "private";
+      return "unknown";
+    }
+
+    async function analyzeKey(value) {
+      if (!value.trim()) {
+        return { ok: false, empty: true, rows: [["状态", "未输入"]] };
+      }
+
+      let parsed;
+      try {
+        parsed = parsePem(value) || parseOpenSshPublic(value);
+      } catch (error) {
+        return { ok: false, rows: [["状态", "解析失败"], ["原因", error.message || "格式无效"]] };
+      }
+
+      if (!parsed) {
+        return { ok: false, rows: [["状态", "格式未识别"]] };
+      }
+
+      const fingerprint = bytesToBase64(await sha256(parsed.bytes)).replace(/=+$/, "");
+      const hex = bytesToHex((await sha256(parsed.bytes)).slice(0, 12));
+      const rows = [
+        ["状态", "格式有效"],
+        ["格式", parsed.format],
+        ["类型", parsed.label],
+        ["用途", keyKind(parsed.label) === "public" ? "公钥" : keyKind(parsed.label) === "private" ? "私钥" : "未知"],
+        ["大小", `${parsed.bytes.byteLength} bytes`],
+        ["SHA-256", fingerprint],
+        ["短指纹", hex]
+      ];
+
+      const bits = /RSA|ssh-rsa/i.test(parsed.label) && parsed.format === "PEM" ? estimateRsaBitsFromDer(parsed.bytes) : "";
+      if (bits) rows.splice(4, 0, ["RSA 位数", bits]);
+      if (parsed.comment) rows.push(["备注", parsed.comment]);
+      return { ok: true, parsed, rows };
+    }
+
+    function renderKeyRows(target, rows) {
+      target.innerHTML = rows.map(([name, value]) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(value || "-")}</dd>`).join("");
+    }
+
+    async function importRsaPublic(bytes, algorithm) {
+      return crypto.subtle.importKey("spki", bytes, algorithm, false, ["verify"]);
+    }
+
+    async function importRsaPrivate(bytes, algorithm) {
+      return crypto.subtle.importKey("pkcs8", bytes, algorithm, false, ["sign"]);
+    }
+
+    async function importEcPublic(bytes, namedCurve) {
+      return crypto.subtle.importKey("spki", bytes, { name: "ECDSA", namedCurve }, false, ["verify"]);
+    }
+
+    async function importEcPrivate(bytes, namedCurve) {
+      return crypto.subtle.importKey("pkcs8", bytes, { name: "ECDSA", namedCurve }, false, ["sign"]);
+    }
+
+    async function tryPairVerification(publicParsed, privateParsed) {
+      if (!publicParsed || !privateParsed || publicParsed.format !== "PEM" || privateParsed.format !== "PEM") {
+        return { ok: false, message: "密钥对匹配需要 PEM 公钥和 PEM 私钥", type: "warn" };
+      }
+
+      const data = new TextEncoder().encode("codex-key-pair-check");
+      const attempts = [
+        {
+          label: "RSA-PSS SHA-256",
+          publicImport: () => importRsaPublic(publicParsed.bytes, { name: "RSA-PSS", hash: "SHA-256" }),
+          privateImport: () => importRsaPrivate(privateParsed.bytes, { name: "RSA-PSS", hash: "SHA-256" }),
+          signParams: { name: "RSA-PSS", saltLength: 32 },
+          verifyParams: { name: "RSA-PSS", saltLength: 32 }
+        },
+        {
+          label: "RSASSA-PKCS1-v1_5 SHA-256",
+          publicImport: () => importRsaPublic(publicParsed.bytes, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }),
+          privateImport: () => importRsaPrivate(privateParsed.bytes, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }),
+          signParams: { name: "RSASSA-PKCS1-v1_5" },
+          verifyParams: { name: "RSASSA-PKCS1-v1_5" }
+        },
+        ...["P-256", "P-384", "P-521"].map((namedCurve) => ({
+          label: `ECDSA ${namedCurve}`,
+          publicImport: () => importEcPublic(publicParsed.bytes, namedCurve),
+          privateImport: () => importEcPrivate(privateParsed.bytes, namedCurve),
+          signParams: { name: "ECDSA", hash: namedCurve === "P-256" ? "SHA-256" : namedCurve === "P-384" ? "SHA-384" : "SHA-512" },
+          verifyParams: { name: "ECDSA", hash: namedCurve === "P-256" ? "SHA-256" : namedCurve === "P-384" ? "SHA-384" : "SHA-512" }
+        }))
+      ];
+
+      for (const attempt of attempts) {
+        try {
+          const publicKey = await attempt.publicImport();
+          const privateKey = await attempt.privateImport();
+          const signature = await crypto.subtle.sign(attempt.signParams, privateKey, data);
+          const ok = await crypto.subtle.verify(attempt.verifyParams, publicKey, signature, data);
+          if (ok) return { ok: true, message: `密钥对匹配：${attempt.label}`, type: "ok" };
+        } catch {
+          continue;
+        }
+      }
+
+      return { ok: false, message: "未能证明公钥和私钥匹配", type: "bad" };
+    }
+
+    async function analyzeKeys() {
+      const publicResult = await analyzeKey(publicKeyInput.value);
+      const privateResult = await analyzeKey(privateKeyInput.value);
+      renderKeyRows(publicKeyReport, publicResult.rows);
+      renderKeyRows(privateKeyReport, privateResult.rows);
+
+      const tags = [];
+      tags.push(publicResult.ok ? tag("公钥格式有效", "ok") : tag("公钥未通过", publicResult.empty ? "" : "bad"));
+      tags.push(privateResult.ok ? tag("私钥格式有效", "ok") : tag("私钥未通过", privateResult.empty ? "" : "bad"));
+
+      if (publicResult.ok && privateResult.ok) {
+        const pair = await tryPairVerification(publicResult.parsed, privateResult.parsed);
+        tags.push(tag(pair.message, pair.type));
+      }
+
+      keyFeedback.innerHTML = tags.join("");
+      lastKeyReportText = [
+        "公钥信息",
+        ...publicResult.rows.map(([k, v]) => `${k}: ${v}`),
+        "",
+        "私钥信息",
+        ...privateResult.rows.map(([k, v]) => `${k}: ${v}`),
+        "",
+        keyFeedback.textContent.trim()
+      ].join("\n");
+      setStatus("密钥验证已完成");
+    }
+
+    async function verifySignature() {
+      const publicResult = await analyzeKey(publicKeyInput.value);
+      if (!publicResult.ok || publicResult.parsed.format !== "PEM") {
+        signatureFeedback.innerHTML = tag("需要有效的 PEM 公钥", "warn");
+        return;
+      }
+
+      const message = new TextEncoder().encode(signatureMessage.value);
+      let signature;
+      try {
+        signature = base64ToBytes(signatureInput.value);
+      } catch {
+        signatureFeedback.innerHTML = tag("签名不是有效 Base64", "bad");
+        return;
+      }
+
+      const attempts = [
+        {
+          label: "RSA-PSS SHA-256",
+          importKey: () => importRsaPublic(publicResult.parsed.bytes, { name: "RSA-PSS", hash: "SHA-256" }),
+          params: { name: "RSA-PSS", saltLength: 32 }
+        },
+        {
+          label: "RSASSA-PKCS1-v1_5 SHA-256",
+          importKey: () => importRsaPublic(publicResult.parsed.bytes, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }),
+          params: { name: "RSASSA-PKCS1-v1_5" }
+        },
+        ...["P-256", "P-384", "P-521"].map((namedCurve) => ({
+          label: `ECDSA ${namedCurve}`,
+          importKey: () => importEcPublic(publicResult.parsed.bytes, namedCurve),
+          params: { name: "ECDSA", hash: namedCurve === "P-256" ? "SHA-256" : namedCurve === "P-384" ? "SHA-384" : "SHA-512" }
+        }))
+      ];
+
+      for (const attempt of attempts) {
+        try {
+          const key = await attempt.importKey();
+          const ok = await crypto.subtle.verify(attempt.params, key, signature, message);
+          if (ok) {
+            signatureFeedback.innerHTML = tag(`签名有效：${attempt.label}`, "ok");
+            setStatus("签名验证通过");
+            return;
+          }
+        } catch {
+          continue;
+        }
+      }
+
+      signatureFeedback.innerHTML = tag("签名无效或算法不匹配", "bad");
+      setStatus("签名验证未通过");
+    }
+
+    $("#analyzeKeysBtn").addEventListener("click", analyzeKeys);
+    $("#copyKeyReportBtn").addEventListener("click", () => copyText(lastKeyReportText, "密钥报告已复制"));
+    $("#verifySignatureBtn").addEventListener("click", verifySignature);
+    $("#keySampleBtn").addEventListener("click", async () => {
+      if (!crypto.subtle) {
+        keyFeedback.innerHTML = tag("当前浏览器不支持 Web Crypto", "bad");
+        return;
+      }
+
+      setStatus("正在生成示例密钥");
+      const pair = await crypto.subtle.generateKey(
+        {
+          name: "RSASSA-PKCS1-v1_5",
+          modulusLength: 2048,
+          publicExponent: new Uint8Array([1, 0, 1]),
+          hash: "SHA-256"
+        },
+        true,
+        ["sign", "verify"]
+      );
+      const spki = await crypto.subtle.exportKey("spki", pair.publicKey);
+      const pkcs8 = await crypto.subtle.exportKey("pkcs8", pair.privateKey);
+      publicKeyInput.value = pemWrap("PUBLIC KEY", spki);
+      privateKeyInput.value = pemWrap("PRIVATE KEY", pkcs8);
+      await analyzeKeys();
+    });
+    $("#keyClearBtn").addEventListener("click", () => {
+      publicKeyInput.value = "";
+      privateKeyInput.value = "";
+      signatureMessage.value = "";
+      signatureInput.value = "";
+      renderKeyRows(publicKeyReport, [["状态", "未输入"]]);
+      renderKeyRows(privateKeyReport, [["状态", "未输入"]]);
+      keyFeedback.innerHTML = tag("等待验证");
+      signatureFeedback.innerHTML = tag("等待验签");
+      lastKeyReportText = "";
+    });
+    renderKeyRows(publicKeyReport, [["状态", "未输入"]]);
+    renderKeyRows(privateKeyReport, [["状态", "未输入"]]);
+
+    const facebookInput = $("#facebookInput");
+    const facebookResults = $("#facebookResults");
+    const facebookSummary = $("#facebookSummary");
+    let facebookRows = [];
+
+    function normalizeFacebookUrl(value) {
+      const trimmed = value.trim();
+      if (!trimmed) return null;
+      const withScheme = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+      try {
+        const url = new URL(withScheme);
+        const host = url.hostname.replace(/^m\./, "www.").replace(/^web\./, "www.");
+        const isFacebook = /(^|\.)facebook\.com$/i.test(host) || /(^|\.)fb\.com$/i.test(host);
+        return {
+          input: trimmed,
+          url: `https://${host}${url.pathname}${url.search}`,
+          host,
+          path: url.pathname,
+          valid: isFacebook
+        };
+      } catch {
+        return { input: trimmed, url: "", host: "", path: "", valid: false, invalidUrl: true };
+      }
+    }
+
+    function profileType(row) {
+      if (row.invalidUrl) return "URL 无效";
+      if (!row.valid) return "非 Facebook";
+      if (/\/profile\.php$/i.test(row.path)) return "profile.php";
+      const name = row.path.split("/").filter(Boolean)[0] || "";
+      if (!name) return "首页链接";
+      if (/^(pages|groups|marketplace|events|watch|reel|share)$/i.test(name)) return "特殊链接";
+      return "公开主页";
+    }
+
+    function statusForRow(row) {
+      if (row.invalidUrl) return { text: "URL 无效", type: "bad" };
+      if (!row.valid) return { text: "非 Facebook 链接", type: "warn" };
+      return { text: "待人工核验", type: "info" };
+    }
+
+    function renderFacebookResults() {
+      if (!facebookRows.length) {
+        facebookResults.className = "empty";
+        facebookResults.textContent = "暂无结果";
+        facebookSummary.textContent = "等待输入";
+        return;
+      }
+
+      facebookResults.className = "table-wrap";
+      const validCount = facebookRows.filter((row) => row.valid).length;
+      facebookSummary.textContent = `${facebookRows.length} 条记录，${validCount} 条有效链接`;
+      const rows = facebookRows.map((row, index) => {
+        const status = row.manualStatus || statusForRow(row);
+        const openButton = row.valid
+          ? `<a class="btn secondary" href="${escapeHtml(row.url)}" target="_blank" rel="noopener noreferrer">打开</a>`
+          : "";
+        return `
+          <tr>
+            <td>${index + 1}</td>
+            <td class="url-cell">${escapeHtml(row.url || row.input)}</td>
+            <td>${escapeHtml(profileType(row))}</td>
+            <td>${tag(status.text, status.type)}</td>
+            <td>
+              <div class="row-actions">
+                ${openButton}
+                <button class="btn secondary" type="button" data-fb-mark="${index}" data-fb-status="alive">活户</button>
+                <button class="btn secondary" type="button" data-fb-mark="${index}" data-fb-status="dead">死户</button>
+                <button class="btn secondary" type="button" data-fb-mark="${index}" data-fb-status="review">复核</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      facebookResults.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>链接</th>
+              <th>类型</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+
+      $$("[data-fb-mark]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const row = facebookRows[Number(button.dataset.fbMark)];
+          const statusMap = {
+            alive: { text: "活户", type: "ok" },
+            dead: { text: "死户", type: "bad" },
+            review: { text: "待复核", type: "warn" }
+          };
+          row.manualStatus = statusMap[button.dataset.fbStatus];
+          renderFacebookResults();
+        });
+      });
+    }
+
+    function checkFacebook() {
+      const lines = facebookInput.value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+      facebookRows = lines.map(normalizeFacebookUrl).filter(Boolean);
+      renderFacebookResults();
+      setStatus(facebookRows.length ? `已生成 ${facebookRows.length} 条检查结果` : "等待 Facebook 链接");
+    }
+
+    function facebookReport() {
+      return facebookRows.map((row, index) => {
+        const status = row.manualStatus || statusForRow(row);
+        return `${index + 1}. ${row.url || row.input} | ${profileType(row)} | ${status.text}`;
+      }).join("\n");
+    }
+
+    $("#facebookCheckBtn").addEventListener("click", checkFacebook);
+    $("#facebookSampleBtn").addEventListener("click", () => {
+      facebookInput.value = [
+        "https://www.facebook.com/zuck",
+        "facebook.com/profile.php?id=100000000000001",
+        "https://example.com/not-facebook"
+      ].join("\n");
+      checkFacebook();
+    });
+    $("#facebookClearBtn").addEventListener("click", () => {
+      facebookInput.value = "";
+      facebookRows = [];
+      renderFacebookResults();
+      facebookInput.focus();
+    });
+    $("#openFacebookValidBtn").addEventListener("click", () => {
+      facebookRows.filter((row) => row.valid).forEach((row) => window.open(row.url, "_blank", "noopener,noreferrer"));
+      setStatus("已打开有效 Facebook 链接");
+    });
+    $("#copyFacebookReportBtn").addEventListener("click", () => copyText(facebookReport(), "Facebook 报告已复制"));
   </script>
 </body>
 </html>
