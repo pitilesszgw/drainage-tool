@@ -1195,37 +1195,20 @@
     }
 
     function isCookiePart(value) {
-      return /(^|;)\s*(c_user|xs|fr|datr|sb|wd|presence|locale)=/i.test(value) || isJsonCookieArray(value);
+      return /(^|;)\s*(c_user|xs|fr|datr|sb|wd|presence|locale)=/i.test(value) || isJsonCookieText(value);
     }
 
-    function parseJsonCookieArray(value) {
+    function isJsonCookieText(value) {
       const trimmed = value.trim();
-      if (!trimmed.startsWith("[") || !trimmed.endsWith("]")) {
-        return null;
-      }
-
-      try {
-        const cookies = JSON.parse(trimmed);
-        if (!Array.isArray(cookies)) {
-          return null;
-        }
-
-        const pairs = cookies
-          .filter((cookie) => cookie && typeof cookie.name === "string" && cookie.name && "value" in cookie)
-          .map((cookie) => `${cookie.name}=${String(cookie.value)}`);
-
-        return pairs.length ? pairs.join(";") : null;
-      } catch {
-        return null;
-      }
+      return trimmed.startsWith("[")
+        && trimmed.includes('"name"')
+        && trimmed.includes('"value"')
+        && trimmed.includes("]");
     }
 
-    function isJsonCookieArray(value) {
-      return Boolean(parseJsonCookieArray(value));
-    }
-
-    function normalizeCookiePart(value) {
-      return parseJsonCookieArray(value) || value;
+    function normalizeCookieParts(parts) {
+      const joined = parts.join(";");
+      return parts.some(isJsonCookieText) ? joined.trim() : normalizeCookie(joined);
     }
 
     function isTwoFactor(value) {
@@ -1319,11 +1302,11 @@
       const cookieParts = [];
       parts.forEach((part, index) => {
         if (isCookiePart(part)) {
-          cookieParts.push(normalizeCookiePart(part));
+          cookieParts.push(part);
           usedIndexes.add(index);
         }
       });
-      result.cookie = normalizeCookie(cookieParts.join(";"));
+      result.cookie = normalizeCookieParts(cookieParts);
 
       const accountIndex = parts.findIndex((part, index) => !usedIndexes.has(index) && isAccount(part));
       if (accountIndex >= 0) {
