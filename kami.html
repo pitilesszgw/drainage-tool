@@ -1195,7 +1195,37 @@
     }
 
     function isCookiePart(value) {
-      return /(^|;)\s*(c_user|xs|fr|datr|sb|wd|presence|locale)=/i.test(value);
+      return /(^|;)\s*(c_user|xs|fr|datr|sb|wd|presence|locale)=/i.test(value) || isJsonCookieArray(value);
+    }
+
+    function parseJsonCookieArray(value) {
+      const trimmed = value.trim();
+      if (!trimmed.startsWith("[") || !trimmed.endsWith("]")) {
+        return null;
+      }
+
+      try {
+        const cookies = JSON.parse(trimmed);
+        if (!Array.isArray(cookies)) {
+          return null;
+        }
+
+        const pairs = cookies
+          .filter((cookie) => cookie && typeof cookie.name === "string" && cookie.name && "value" in cookie)
+          .map((cookie) => `${cookie.name}=${String(cookie.value)}`);
+
+        return pairs.length ? pairs.join(";") : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function isJsonCookieArray(value) {
+      return Boolean(parseJsonCookieArray(value));
+    }
+
+    function normalizeCookiePart(value) {
+      return parseJsonCookieArray(value) || value;
     }
 
     function isTwoFactor(value) {
@@ -1289,7 +1319,7 @@
       const cookieParts = [];
       parts.forEach((part, index) => {
         if (isCookiePart(part)) {
-          cookieParts.push(part);
+          cookieParts.push(normalizeCookiePart(part));
           usedIndexes.add(index);
         }
       });
