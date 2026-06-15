@@ -1184,26 +1184,93 @@
     ];
 
     function splitParts(raw) {
-      return raw
-        .split("|")
-        .map((part) => part.trim())
-        .filter(Boolean);
+      const parts = [];
+      let current = "";
+      let depth = 0;
+      let inQuote = false;
+      let escaping = false;
+
+      for (const char of raw) {
+        if (escaping) {
+          current += char;
+          escaping = false;
+          continue;
+        }
+
+        if (char === "\\") {
+          current += char;
+          escaping = inQuote;
+          continue;
+        }
+
+        if (char === '"') {
+          inQuote = !inQuote;
+          current += char;
+          continue;
+        }
+
+        if (!inQuote && (char === "[" || char === "{")) {
+          depth += 1;
+        } else if (!inQuote && (char === "]" || char === "}")) {
+          depth = Math.max(0, depth - 1);
+        }
+
+        if (char === "|" && !inQuote && depth === 0) {
+          const trimmed = current.trim();
+          if (trimmed) parts.push(trimmed);
+          current = "";
+          continue;
+        }
+
+        current += char;
+      }
+
+      const trimmed = current.trim();
+      if (trimmed) parts.push(trimmed);
+      return parts;
     }
 
     function isEmail(value) {
       return /^[^\s@|;]+@[^\s@|;]+\.[^\s@|;]+$/.test(value);
     }
 
+    function jsonCookieToString(value) {
+      const trimmed = value.trim().replace(/\|+$/g, "");
+      if (!trimmed.startsWith("[")) return "";
+
+      try {
+        const cookies = JSON.parse(trimmed);
+        if (!Array.isArray(cookies)) return "";
+
+        const cookieItems = cookies.filter((cookie) => {
+          return cookie
+            && typeof cookie === "object"
+            && typeof cookie.name === "string"
+            && Object.prototype.hasOwnProperty.call(cookie, "value");
+        });
+        if (!cookieItems.length) return "";
+
+        const looksLikeCookieExport = cookieItems.some((cookie) => {
+          return ["domain", "path", "expires", "expires_timestamp", "is_secure", "httponly", "samesite"].some((key) => {
+            return Object.prototype.hasOwnProperty.call(cookie, key);
+          });
+        });
+        if (!looksLikeCookieExport) return "";
+
+        return cookieItems
+          .map((cookie) => `${cookie.name.trim()}=${String(cookie.value)}`)
+          .join(";");
+      } catch {
+        return "";
+      }
+    }
+
     function isCookiePart(value) {
-      return /(^|;)\s*(c_user|xs|fr|datr|sb|wd|presence|locale)=/i.test(value) || isJsonCookieText(value);
+      return /(^|;)\s*(c_user|xs|fr|datr|sb|wd|presence|locale|oo)=/i.test(value) || isJsonCookieText(value);
     }
 
     function isJsonCookieText(value) {
-      const trimmed = value.trim();
-      return trimmed.startsWith("[")
-        && trimmed.includes('"name"')
-        && trimmed.includes('"value"')
-        && trimmed.includes("]");
+      return Boolean(jsonCookieToString(value));
     }
 
     function normalizeCookieParts(parts) {
@@ -1229,6 +1296,7 @@
 
     function normalizeCookie(value) {
       const trimmed = value.trim().replace(/\|+$/g, "");
+      if (jsonCookieToString(trimmed)) return trimmed;
       return trimmed && !trimmed.endsWith(";") ? `${trimmed};` : trimmed;
     }
 
@@ -1302,7 +1370,7 @@
       const cookieParts = [];
       parts.forEach((part, index) => {
         if (isCookiePart(part)) {
-          cookieParts.push(part);
+          cookieParts.push(normalizeCookie(part));
           usedIndexes.add(index);
         }
       });
